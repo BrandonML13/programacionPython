@@ -9,11 +9,26 @@ class MenuBanco:
         print("¿Que le gustaria hacer?")
         print("1.- depositar")
         print("2.- retirar")
+        print("3.- salir")
         self.opcion = input("ingrese el numero de la acción que desea realizar:")
-    def realizaAccion(self):
-        if self.opcion == "1":
+    def realizarAccion(self):
+        while True:
+            self.desplegarOpciones()
+          
+            if self.opcion == "1":
+                MenuBanco.depositar(self)
+            elif self.opcion == "2":
+                MenuBanco.retirar(self)
+            elif self.opcion == "3":
+                print()
+                print("Gracias por su confianza en Banciencias, vuelva pronto")
+                break 
+            else :
+                print()
+                print("opcion no valida por favor vuelva a ingresar un numero valido")
+        
+    def depositar(self):
           cuenta1.depositar(float(input()))
-        if self.opcion == "2":
-           cuenta1.retirar(float(input()))
-        else:
-          print("opcion no valida por favor vuelva a ingresar un numero valido")
+
+    def retirar(self):
+          cuenta1.retirar(float(input()))
