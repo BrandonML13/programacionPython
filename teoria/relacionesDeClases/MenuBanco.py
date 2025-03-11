@@ -6,6 +6,7 @@ class MenuBanco:
         print("Bienvenid@ a su banco de confianza, "+ banco1.bienvenida)
         print()
     def desplegarOpciones(self):
+        MenuBanco.estadoCuenta(self)
         print("¿Que le gustaria hacer?")
         print("1.- depositar")
         print("2.- retirar")
@@ -28,7 +29,10 @@ class MenuBanco:
                 print("opcion no valida por favor vuelva a ingresar un numero valido")
         
     def depositar(self):
-          cuenta1.depositar(float(input()))
+          cuenta1.depositar(float(input("Introduzca la cantidad que desea depositar")))
 
     def retirar(self):
-          cuenta1.retirar(float(input()))
+          cuenta1.retirar(float(input("Introduzca la cantidad que desea retirar")))
+          
+    def estadoCuenta(self):
+        print("su saldo actual es de =",cuenta1.saldo)
