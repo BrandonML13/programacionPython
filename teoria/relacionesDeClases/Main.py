@@ -10,13 +10,9 @@ class Main:
 
 
 
+
 banco1 = MenuBanco("Banciencias")
 banco1.darBienvenida()
-cliente1 = Cliente("Juan Bodoque","Iztapalapa,fresas #59",35)
-cliente1.imprimirDetalles()
-cuenta1 = Cuenta(80000,"debito","Juan Bodoque")
-cuenta1.imprimirDetalles()
-cuenta1.retirar(5000)
-cuenta1.imprimirDetalles()
-cuenta1.depositar(17000)
-cuenta1.imprimirDetalles()
+cuenta1 = Cuenta(75300,"Debito")
+cliente1 = Cliente("Brandon Marlo","Roma,La petit cita #59,C.P 08343",35,cuenta1)
+banco1.realizarAccion()
