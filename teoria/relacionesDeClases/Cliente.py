@@ -7,7 +7,7 @@ class Cliente:
     def imprimirDetalles(self):
         print("La informacion del cliente es:")
         print("nombre:", self.nombrePropietario)
-        print("edad:", self.edadPropietario)
+        print("edad:", self.edadPropietario,"años")
         print("direccion:", self.direccionPropietario)
         print(self.cuenta.imprimirDetalles())
         print()
