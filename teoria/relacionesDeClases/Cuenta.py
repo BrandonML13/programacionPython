@@ -1,16 +1,17 @@
 class Cuenta:
     def __init__(self,valor,tipo):
-        self.saldo = valor
-        self.tipo = tipo
+        self.__valor = valor
+        self.__tipo = tipo
   
     def imprimirDetalles(self):
-        print("Saldo: ", self.saldo)
-        print("Tarjeta tipo: ", self.tipo)
+        print("Saldo: ", self.__valor)
+        print("Tarjeta tipo: ", self.__tipo)
        
 
     def retirar(self,cantidad):
-        self.saldo = self.saldo - cantidad
+        self.__valor = self.__valor - cantidad
         
     def depositar(self,cantidad):
-        self.saldo = self.saldo + cantidad
-        
+        self.__valor = self.__valor + cantidad
+
+cuenta1 = Cuenta(75300,"Debito")
