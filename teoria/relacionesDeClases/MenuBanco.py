@@ -3,10 +3,11 @@
 #Autor: Brandon Martinez Lopez 
 class MenuBanco:
     def __init__(self,banco,opcion=None):
-        self.bienvenida = banco
+        self.__bienvenida = banco
         self.opcion = opcion
+
     def darBienvenida(self):
-        print("Bienvenid@ a su banco de confianza, "+ banco1.bienvenida)
+        print("Bienvenid@ a su banco de confianza, "+ banco1.__bienvenida)
         print()
     def desplegarOpciones(self):
         MenuBanco.estadoCuenta(self)
@@ -55,4 +56,6 @@ class MenuBanco:
         cliente1.imprimirDetalles()
           
     def estadoCuenta(self):
-        print("su saldo actual es de =",cuenta1.saldo)
+        print("su saldo actual es de =",cuenta1.__valor)
+    
+banco1 = MenuBanco("Banciencias")
