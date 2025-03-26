@@ -11,8 +11,5 @@ class Main:
 
 
 
-banco1 = MenuBanco("Banciencias")
 banco1.darBienvenida()
-cuenta1 = Cuenta(75300,"Debito")
-cliente1 = Cliente("Brandon Marlo","Roma,La petit cita #59,C.P 08343",35,cuenta1)
 banco1.realizarAccion()
