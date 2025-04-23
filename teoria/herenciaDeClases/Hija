@@ -1,4 +1,4 @@
-From cuenta import Cuenta
+From Cuenta.py import
 
 class CuentaHija(Cuenta):
     def __init__(self, valor):
