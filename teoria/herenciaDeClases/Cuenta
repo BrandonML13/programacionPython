@@ -1,4 +1,4 @@
-class Cuenta:
+class Madre:
     def __init__(self,valor,tipo):
         self.__valor = valor
         self.__tipo = tipo
@@ -14,4 +14,4 @@ class Cuenta:
         return f"Cuenta tipo: {self.__tipo} | Saldo: ${self.__valor:.2f}"
 
 
-cuenta1 = Cuenta(75300,"Debito")
+cuenta1 = Madre(75300,"Debito")
