@@ -1,1 +1,6 @@
-From Cuenta 
+From cuenta import Cuenta
+
+class CuentaHija(Cuenta):
+    def __init__(self, valor):
+        Cuenta.__init__(self, valor, "Hija")
+
