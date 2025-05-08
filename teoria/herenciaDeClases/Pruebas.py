@@ -1,4 +1,4 @@
 #sigo trabajando en esto
-from Debito.py 
-from Credito.py
-from Madre.py
+from Debito.py import
+from Credito.py import
+from Madre.py import
