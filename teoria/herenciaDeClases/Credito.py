@@ -1,3 +1,5 @@
+From Madre.py import
+
 class CuentaCredito(Madre):
     def __init__(self, valor, limite_credito):
         super().__init__(valor, "Crédito")
