@@ -2,10 +2,6 @@ class Madre:
     def __init__(self,valor,tipo):
         self.__valor = valor
         self.__tipo = tipo
-  
-    def imprimirDetalles(self):
-        print("Saldo: ", self.__valor)
-        print("Tarjeta tipo: ", self.__tipo)
         
     def depositar(self,cantidad):
         self.__valor = self.__valor + cantidad
