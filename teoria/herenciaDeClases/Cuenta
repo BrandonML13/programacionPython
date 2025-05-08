@@ -11,7 +11,7 @@ class Madre:
         self.__valor = self.__valor + cantidad
         
     def __str__(self):
-        return f"Cuenta tipo: {self.__tipo} | Saldo: ${self.__valor:.2f}"
+        return f"Cuenta tipo: {self.__tipo}, Saldo disponible: ${self.__valor:.2f}"
 
 
 cuenta1 = Madre(75300,"Debito")
