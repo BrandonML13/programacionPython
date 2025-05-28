@@ -1,0 +1,304 @@
+"""
+Esta es la forma general en la que se va a ver mi codigo al final del trabajo, lo he estado trabajando atraves de google colab 
+"""
+
+# Clase madre para todas las cuentas bancarias
+class Cuenta:
+    def __init__(self, titular, saldo=0):
+        self.__titular = titular 
+        self.__saldo = saldo
+    
+    # Decorador property para tener un codigo màs limpio
+    @property
+    def titular(self):
+        return self.__titular  
+    
+    
+    @property
+    def saldo(self):
+        return self.__saldo   
+    def depositar(self, cantidad):
+        if cantidad > 0:  # Validar que la cantidad sea positiva
+            self.__saldo += cantidad  # Sumar al saldo actual
+            return True  # Indicar éxito en la operación
+        return False  # Indicar fallo en la operación
+    
+    
+    def retirar(self, cantidad):
+        # Valido que la cantidad sea positiva y que haya saldo suficiente
+        if cantidad > 0 and cantidad <= self.__saldo:
+            self.__saldo -= cantidad  # Restar del saldo actual
+            return True 
+        return False  
+    
+    
+    def imprimir_detalles(self):
+        print(f"Titular: {self.__titular}") 
+        print(f"Saldo: ${self.__saldo:.2f}") 
+
+
+class CuentaAhorro(Cuenta):
+    # Constructor con parámetros adicionales específicos de ahorro
+    def __init__(self, titular, saldo=0, interes=0.02):
+        super().__init__(titular, saldo) 
+        self.__interes = interes  # Atributo para la tasa de interés
+
+
+    @property
+    def interes(self):
+        return self.__interes
+    
+    # Método para calcular el interés generado del saldo de la cuenta
+    def calcular_interes(self):
+        return self.saldo * self.__interes  
+    
+    # Sobreescritura del método para mostrar detalles
+    def imprimir_detalles(self):
+        super().imprimir_detalles()  
+        print(f"Tipo de cuenta: Ahorro")  
+        print(f"Tasa de interés: {self.__interes*100}%")  # Mostrar tasa en porcentaje
+
+
+class CuentaDebito(Cuenta):
+    # Constructor con parámetro adicional de sobregiro
+    def __init__(self, titular, saldo=0, sobregiro=1000):
+        super().__init__(titular, saldo)  
+        self.__sobregiro = sobregiro  # Límite de sobregiro permitido
+    
+    @property
+    def sobregiro(self):
+        return self.__sobregiro
+    
+    # Sobreescritura del método retirar para permitir sobregiros
+    def retirar(self, cantidad):
+        # Validar cantidad positiva y que no exceda saldo + sobregiro
+        if cantidad > 0 and cantidad <= (self.saldo + self.__sobregiro):
+            self._Cuenta__saldo -= cantidad  # Acceder al saldo privado del padre
+            return True    
+        return False    
+    
+    # Sobreescritura del método para mostrar detalles
+    def imprimir_detalles(self):
+        super().imprimir_detalles()  
+        print(f"Tipo de cuenta: Corriente")  # Tipo de cuenta
+        print(f"Límite de sobregiro: ${self.__sobregiro:.2f}")  # Límite de sobregiro
+
+
+class CuentaCredito(Cuenta):
+    # Constructor con parámetros específicos de crédito
+    def __init__(self, titular, limite_credito=5000, tasa_interes=0.15):
+        super().__init__(titular, 0)  # Saldo inicia en 0 (sin fondos propios)
+        self.__limite_credito = limite_credito  
+        self.__tasa_interes = tasa_interes    
+        self.__saldo_disponible = limite_credito  # Crédito disponible
+    
+    @property
+    def limite_credito(self):
+        return self.__limite_credito
+    
+    @property
+    def saldo_disponible(self):
+        return self.__saldo_disponible
+    
+    @property
+    def tasa_interes(self):
+        return self.__tasa_interes
+    
+    # Sobreescritura del método retirar para usar crédito
+    def retirar(self, cantidad):
+        # Validar que haya crédito disponible
+        if cantidad > 0 and cantidad <= self.__saldo_disponible:
+            self._Cuenta__saldo -= cantidad  # Aumenta la deuda se permite saldo negativo
+            self.__saldo_disponible -= cantidad  # Reducir crédito disponible
+            return True  
+        return False  
+    
+    # Sobreescritura del método depositar para pagar deuda
+    def depositar(self, cantidad):
+        if cantidad > 0:  
+            self._Cuenta__saldo += cantidad  # Reduce la deuda
+            # Recalcular crédito disponible (sin exceder el límite)
+            self.__saldo_disponible = min(
+                self.__limite_credito, 
+                self.__saldo_disponible + cantidad
+            )
+            return True   
+        return False   
+    
+    # Método para calcular interés mensual sobre la deuda
+    def calcular_interes_mensual(self):
+        if self.saldo < 0:  # Solo si hay deuda
+            return abs(self.saldo) * (self.__tasa_interes / 12)  # Interés mensual
+        return 0  # Sin deuda, sin interés
+
+
+    def imprimir_detalles(self):
+        super().imprimir_detalles()    
+        print(f"Tipo de cuenta: Crédito")    
+        print(f"Límite de crédito: ${self.__limite_credito:.2f}")  # Límite total
+        print(f"Saldo disponible: ${self.__saldo_disponible:.2f}")  # Crédito disponible
+        print(f"Tasa de interés anual: {self.__tasa_interes*100}%")  # Tasa de interés
+        # Mostrar interés mensual solo si hay deuda
+        if self.saldo < 0:
+            print(f"Interés mensual estimado: ${self.calcular_interes_mensual():.2f}")
+
+
+# Clase para el menú de selección de tipo de cuenta
+class MenuTipoCuenta:
+    def __init__(self, banco):
+        self.__banco = banco  # Nombre del banco (privado)
+        self.__cuenta = None  # Cuenta seleccionada (inicialmente None)
+    
+    # Método para mostrar las opciones del menú
+    def mostrar_menu(self):
+        print("Bienvenido a Banciencias")  # Mensaje de bienvenida
+        print("Seleccione su tipo de cuenta:")  
+        print("1. Cuenta de Ahorro")  
+        print("2. Cuenta Corriente")  
+        print("3. Cuenta de Crédito")  
+        print("4. Salir")  
+    
+    # Método para procesar la selección del usuario
+    def seleccionar_cuenta(self):
+        while True:  # Bucle infinito hasta selección válida
+            self.mostrar_menu()  
+            opcion = input("Ingrese su opción: ")  
+            
+            if opcion == "1":  # Crear cuenta de ahorro
+                titular = input("Ingrese su nombre: ")
+                saldo = float(input("Ingrese saldo inicial: "))
+                self.__cuenta = CuentaAhorro(titular, saldo)
+                return self.__cuenta  # Retornar cuenta creada
+            
+            elif opcion == "2":  # Crear cuenta corriente
+                titular = input("Ingrese su nombre: ")
+                saldo = float(input("Ingrese saldo inicial: "))
+                sobregiro = float(input("Ingrese límite de sobregiro (default $1000): ") or 1000)
+                self.__cuenta = CuentaCorriente(titular, saldo, sobregiro)
+                return self.__cuenta  # Retornar cuenta creada
+            
+            elif opcion == "3":  # Crear cuenta de crédito
+                titular = input("Ingrese su nombre: ")
+                limite = float(input("Ingrese límite de crédito (default $5000): ") or 5000)
+                tasa = float(input("Ingrese tasa de interés anual (default 15%): ") or 0.15)
+                self.__cuenta = CuentaCredito(titular, limite, tasa)
+                return self.__cuenta  # Retornar cuenta creada
+            
+            elif opcion == "4":  # Salir del programa
+                print("Gracias por visitarnos. ¡Hasta pronto!")
+                return None  # Retornar None para indicar salida
+            
+            else:  # Opción no válida
+                print("Opción no válida. Intente nuevamente.")
+
+
+# Clase para el menú de operaciones bancarias
+class MenuOperaciones:
+    # Constructor que recibe la cuenta con la que se trabajará
+    def __init__(self, cuenta):
+        self.__cuenta = cuenta  
+    
+    # Método para mostrar el menú de operaciones (se adapta al tipo de cuenta)
+    def mostrar_menu(self):
+        print("\n¿Qué desea hacer?")  
+        print("1. Ver detalles de la cuenta") 
+        
+        # Opción 2 cambia según tipo de cuenta
+        if isinstance(self.__cuenta, CuentaCredito):
+            print("2. Pagar tarjeta")  # Para crédito
+        else:
+            print("2. Depositar dinero")  # Para otras cuentas
+            
+        # Opción 3 cambia según tipo de cuenta
+        if isinstance(self.__cuenta, CuentaCredito):
+            print("3. Usar crédito")  # Para crédito
+        else:
+            print("3. Retirar dinero")  # Para otras cuentas
+        
+        # Opción 4 solo para cuentas con interés
+        if isinstance(self.__cuenta, (CuentaAhorro, CuentaCredito)):
+            print("4. Calcular interés")  
+        else:
+            print("4. ---")  # Opción no disponible
+            
+        print("5. Volver al menú principal")   
+        print("6. Salir")  
+    
+  
+    def ejecutar_operacion(self):
+        while True:  # Bucle infinito hasta salir
+            self.mostrar_menu()  
+            opcion = input("Ingrese su opción: ") 
+            
+            if opcion == "1":  
+                self.__cuenta.imprimir_detalles()
+            
+            elif opcion == "2":  # Depositar/Pagar
+                if isinstance(self.__cuenta, CuentaCredito):
+                    cantidad = float(input("Ingrese cantidad a pagar: "))
+                    if self.__cuenta.depositar(cantidad):
+                        print("Pago realizado con éxito.")
+                    else:
+                        print("Cantidad no válida.")
+                else:
+                    cantidad = float(input("Ingrese cantidad a depositar: "))
+                    if self.__cuenta.depositar(cantidad):
+                        print("Depósito realizado con éxito.")
+                    else:
+                        print("Cantidad no válida.")
+            
+            elif opcion == "3":  # Retirar/Usar crédito
+                if isinstance(self.__cuenta, CuentaCredito):
+                    cantidad = float(input("Ingrese cantidad a utilizar: "))
+                    if self.__cuenta.retirar(cantidad):
+                        print("Transacción realizada con éxito.")
+                    else:
+                        print("Límite de crédito excedido o cantidad no válida.")
+                else:
+                    cantidad = float(input("Ingrese cantidad a retirar: "))
+                    if self.__cuenta.retirar(cantidad):
+                        print("Retiro realizado con éxito.")
+                    else:
+                        print("Fondos insuficientes o cantidad no válida.")
+            
+            elif opcion == "4":  # Calcular interés
+                if isinstance(self.__cuenta, CuentaAhorro):
+                    interes = self.__cuenta.calcular_interes()
+                    print(f"Interés generado: ${interes:.2f}")
+                elif isinstance(self.__cuenta, CuentaCredito):
+                    interes = self.__cuenta.calcular_interes_mensual()
+                    print(f"Interés a pagar este mes: ${interes:.2f}")
+                else:
+                    print("Opción no disponible para este tipo de cuenta")
+            
+            elif opcion == "5":  # Volver al menú principal
+                return True  # Indicar que debe volver
+            
+            elif opcion == "6":  # Salir del programa
+                print("Gracias por usar nuestros servicios. ¡Hasta pronto!")
+                return False  # Indicar que debe terminar
+            
+            else:  # Opción no válida
+                print("Opción no válida. Intente nuevamente.")
+
+
+# Función principal del programa
+def main():
+    banco = "Banciencias" 
+    menu_tipo = MenuTipoCuenta(banco)  # Crear menú de tipos de cuenta
+    
+    while True:  # Bucle principal del programa
+        cuenta = menu_tipo.seleccionar_cuenta()  # Seleccionar tipo de cuenta
+        if cuenta is None:  # Si eligió salir
+            break  # Terminar el programa
+        
+        # Crear menú de operaciones para la cuenta seleccionada
+        menu_operaciones = MenuOperaciones(cuenta)
+        # Ejecutar menú de operaciones hasta que indique volver o salir
+        if not menu_operaciones.ejecutar_operacion():
+            break  # Salir del programa si retorna False
+
+
+# Punto de entrada del programa
+if __name__ == "__main__":
+    main()  # Llamar a la función principal
