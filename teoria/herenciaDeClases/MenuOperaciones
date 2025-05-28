@@ -1,0 +1,89 @@
+# Clase para el menú de operaciones bancarias
+class MenuOperaciones:
+    # Constructor que recibe la cuenta con la que se trabajará
+    def __init__(self, cuenta):
+        self.__cuenta = cuenta  
+    
+    # Método para mostrar el menú de operaciones (se adapta al tipo de cuenta)
+    def mostrar_menu(self):
+        print("\n¿Qué desea hacer?")  
+        print("1. Ver detalles de la cuenta") 
+        
+        # Opción 2 cambia según tipo de cuenta
+        if isinstance(self.__cuenta, CuentaCredito):
+            print("2. Pagar tarjeta")  # Para crédito
+        else:
+            print("2. Depositar dinero")  # Para otras cuentas
+            
+        # Opción 3 cambia según tipo de cuenta
+        if isinstance(self.__cuenta, CuentaCredito):
+            print("3. Usar crédito")  # Para crédito
+        else:
+            print("3. Retirar dinero")  # Para otras cuentas
+        
+        # Opción 4 solo para cuentas con interés
+        if isinstance(self.__cuenta, (CuentaAhorro, CuentaCredito)):
+            print("4. Calcular interés")  
+        else:
+            print("4. ---")  # Opción no disponible
+            
+        print("5. Volver al menú principal")   
+        print("6. Salir")  
+    
+  
+    def ejecutar_operacion(self):
+        while True:  # Bucle infinito hasta salir
+            self.mostrar_menu()  
+            opcion = input("Ingrese su opción: ") 
+            
+            if opcion == "1":  
+                self.__cuenta.imprimir_detalles()
+            
+            elif opcion == "2":  # Depositar/Pagar
+                if isinstance(self.__cuenta, CuentaCredito):
+                    cantidad = float(input("Ingrese cantidad a pagar: "))
+                    if self.__cuenta.depositar(cantidad):
+                        print("Pago realizado con éxito.")
+                    else:
+                        print("Cantidad no válida.")
+                else:
+                    cantidad = float(input("Ingrese cantidad a depositar: "))
+                    if self.__cuenta.depositar(cantidad):
+                        print("Depósito realizado con éxito.")
+                    else:
+                        print("Cantidad no válida.")
+            
+            elif opcion == "3":  # Retirar/Usar crédito
+                if isinstance(self.__cuenta, CuentaCredito):
+                    cantidad = float(input("Ingrese cantidad a utilizar: "))
+                    if self.__cuenta.retirar(cantidad):
+                        print("Transacción realizada con éxito.")
+                    else:
+                        print("Límite de crédito excedido o cantidad no válida.")
+                else:
+                    cantidad = float(input("Ingrese cantidad a retirar: "))
+                    if self.__cuenta.retirar(cantidad):
+                        print("Retiro realizado con éxito.")
+                    else:
+                        print("Fondos insuficientes o cantidad no válida.")
+            
+            elif opcion == "4":  # Calcular interés
+                if isinstance(self.__cuenta, CuentaAhorro):
+                    interes = self.__cuenta.calcular_interes()
+                    print(f"Interés generado: ${interes:.2f}")
+                elif isinstance(self.__cuenta, CuentaCredito):
+                    interes = self.__cuenta.calcular_interes_mensual()
+                    print(f"Interés a pagar este mes: ${interes:.2f}")
+                else:
+                    print("Opción no disponible para este tipo de cuenta")
+            
+            elif opcion == "5":  # Volver al menú principal
+                return True  # Indicar que debe volver
+            
+            elif opcion == "6":  # Salir del programa
+                print("Gracias por usar nuestros servicios. ¡Hasta pronto!")
+                return False  # Indicar que debe terminar
+            
+            else:  # Opción no válida
+                print("Opción no válida. Intente nuevamente.")
+
