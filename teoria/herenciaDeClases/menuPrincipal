@@ -1,0 +1,35 @@
+class MenuTipoCuenta:
+    # ... (código anterior)
+    def mostrar_menu(self):
+        print(f"\nBienvenido al {self.__banco}")
+        print("Seleccione su tipo de cuenta:")
+        print("1. Cuenta de Ahorro")
+        print("2. Cuenta Corriente")
+        print("3. Cuenta de Crédito")
+        print("4. Salir")
+    
+    def seleccionar_cuenta(self):
+        while True:
+            self.mostrar_menu()
+            opcion = input("Ingrese su opción: ")
+            
+            if opcion == "1":
+                titular = input("Ingrese su nombre: ")
+                saldo = float(input("Ingrese saldo inicial: "))
+                self.__cuenta = CuentaAhorro(titular, saldo)
+                return self.__cuenta
+            elif opcion == "2":
+                titular = input("Ingrese su nombre: ")
+                saldo = float(input("Ingrese saldo inicial: "))
+                self.__cuenta = CuentaCorriente(titular, saldo)
+                return self.__cuenta
+            elif opcion == "3":
+                titular = input("Ingrese su nombre: ")
+                limite = float(input("Ingrese límite de crédito (default $5000): ") or 5000)
+                self.__cuenta = CuentaCredito(titular, limite)
+                return self.__cuenta
+            elif opcion == "4":
+                print("Gracias por visitarnos. ¡Hasta pronto!")
+                return None
+            else:
+                print("Opción no válida. Intente nuevamente.")
